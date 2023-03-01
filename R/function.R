@@ -119,7 +119,7 @@ mecab_process  = function(fiction_file = NULL,
                           output = F){
   # 禁止warning
   options (warn = -1)
-  source_python('mecab2.py')
+  source_python(system.file('mecab2.py', package = "AOZORAtools"))
   #分词
   #source_python('mecab.py')
   print(paste0('Output file is in ',mecab_result_dir,'.'))
@@ -144,7 +144,7 @@ mecab_process  = function(fiction_file = NULL,
 # 输出词袋
 word_packet_from_mecab = function(processed_mecab_result,
                                   word_packet_dir ='word_packet_result',output_prefix){
-  source_python('mecab2.py') #测试包
+  source_python(system.file('mecab2.py', package = "AOZORAtools")) #测试包
 
   # 创建文件夹
   print(paste0('Output file is in ',word_packet_dir,'.'))
@@ -181,7 +181,7 @@ word_packet_from_mecab = function(processed_mecab_result,
 #source_python('asari2.py')
 sentiment_analysis = function(text){
   #source_python('mecab2.py') #测试包
-  source_python('asari2.py')
+  source_python(system.file('asari2.py', package = "AOZORAtools"))
   asari_res = funcAsari2(text)
   print(paste0('输入文字的情感是：',asari_res$top_class))
   return(asari_res)
