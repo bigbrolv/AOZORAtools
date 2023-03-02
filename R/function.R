@@ -11,7 +11,7 @@ library(reticulate)
 #pip install asari
 #R
 
-
+#remove.packages('AOZORAtools')
 #devtools::install_github('bigbrolv/AOZORAtools')
 #library(AOZORAtools)
 #sentiment_analysis('広告多すぎる')
@@ -75,21 +75,21 @@ download_fiction <- function(作品名字, 作家, fiction_dir = 'fiction_downlo
 
 
 # Python 函数  funcMecab funcAsari
-mecab = import('MeCab')
-tagger = mecab$Tagger()
-funcMecab = function(text_file){
-  fiction_text = readLines(text_file,encoding= 'Shift-JIS')
-  fiction_text <- iconv(fiction_text, from = "Shift-JIS", to = "UTF-8")
-  fiction_text_all = paste0(fiction_text,collapse = '')
-  return(tagger$parse(fiction_text_all))
-}
-
-asari = import('asari')
-Sonar = asari$api$Sonar()
-funcAsari = function(txt){
-  return(Sonar$ping(text = txt))
-}
-
+# mecab = import('MeCab')
+# tagger = mecab$Tagger()
+# funcMecab = function(text_file){
+#   fiction_text = readLines(text_file,encoding= 'Shift-JIS')
+#   fiction_text <- iconv(fiction_text, from = "Shift-JIS", to = "UTF-8")
+#   fiction_text_all = paste0(fiction_text,collapse = '')
+#   return(tagger$parse(fiction_text_all))
+# }
+# 
+# asari = import('asari')
+# Sonar = asari$api$Sonar()
+# funcAsari = function(txt){
+#   return(Sonar$ping(text = txt))
+# }
+# funcAsari('広告多すぎる')
 # 分词
 mecab_process  = function(fiction_file = NULL,
                           fiction_dir = 'fiction_download',
@@ -153,8 +153,8 @@ word_packet_from_mecab = function(processed_mecab_result,
 
 sentiment_analysis = function(text){
   #source_python('mecab2.py') #测试包
-  #source_python(system.file('data/asari2.py', package = "AOZORAtools"))
-  asari_res = funcAsari(text)
+  source_python(system.file('data/asari2.py', package = "AOZORAtools"))
+  asari_res = funcAsari2(text)
   print(paste0('输入文字的情感是：',asari_res$top_class))
   return(asari_res)
 }
