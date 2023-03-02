@@ -5,9 +5,10 @@ library(R.utils)
 library(mlr)
 library(randomForest)
 library(reticulate)
-#use_python(gsub('lib/R','bin/python3.8',R.home()))
-#py_config()
+use_python(gsub('lib/R','bin/python3.8',R.home()))
+py_config()
 # conda create -n AOZORAtools -c conda-forge R r-devtools r-data.table r-reticulate r-r.utils r-mlr r-randomforest python=3.8 unidic-lite mecab-python3 
+# conda activate AOZORAtools
 #pip install asari
 #R
 
@@ -70,9 +71,13 @@ download_fiction <- function(作品名字, 作家, fiction_dir = 'fiction_downlo
     file.rename(from = unzip_file,to = paste0(fiction_dir,'/',newname))
   }
 }
+#dir.create('AOZORAtools')
+#setwd('AOZORAtools')
 #download_fiction(作品名字 ='樹木とその葉',作家 = '若山牧水' )
-
-
+#a = mecab_process('fiction_download/2210_樹木とその葉_若山牧水_16-酒の讃と苦笑.txt')
+#b =word_packet_from_mecab(a,output_prefix = '1')
+#sentiment_analysis('広告多すぎる')
+#school_classify(b)
 
 # Python 函数  funcMecab funcAsari
 # mecab = import('MeCab')
@@ -161,7 +166,8 @@ sentiment_analysis = function(text){
 
 #a = sentiment_analysis('広告多すぎる')
 #a = funcAsari("広告多すぎる♡")
-
+all_words = readRDS('classifier_word_list.rds')
+model = readRDS('model.rds')
 # 分类器    --需要提前载入model和word_list
 school_classify = function(word_packet_result){
   if (class(word_packet_result)=="data.frame"  ){
@@ -174,10 +180,10 @@ school_classify = function(word_packet_result){
 
 
   # 词袋重合 intersect_df  合并  词袋不重合setdiff_df
-  all_words = readRDS('classifier_word_list.rds')
+  #all_words = readRDS('classifier_word_list.rds')
   match_df = data.frame(word = all_words,code = paste0('W',1:length(all_words)))
 
-  model = readRDS('model.rds')
+  #model = readRDS('model.rds')
   intersect_df = word_packet_df[word_packet_df[,1] %in% all_words,]
   setdiff_df = data.frame(word = setdiff(all_words,word_packet_df[,1]),frequence = 0)
   need_predict_df = rbind(intersect_df,setdiff_df)
