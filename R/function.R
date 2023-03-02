@@ -1,37 +1,23 @@
 library(devtools)
 #install.packages(c("devtools","roxygen2","testthat","knitr"))
-
+#reticulate::install_miniconda()
+#use_miniconda('/Users/slv/Library/r-miniconda')
+#reticulate::py_install('mecab-python3==1.0.2',pip = T)
+#reticulate::py_install('unidic-lite',pip = T)
+#reticulate::py_install('fugashi',pip = T)
+#reticulate::py_install('asari',pip = T)
+#reticulate::conda_install(packages = 'libcxx',forge = T)
+# mac 需要安装xcode （mecab need）
 #需要的包  1.data.table 2.reticulate 3.R.utils
 library(data.table)
 library(reticulate)
 library(R.utils)
 library(mlr)
 library(randomForest)
-# working dir
-#setwd('/Users/slv/JLtools/')
-if(F){
-  ######包需要自带变量fiction_info
-  fiction_info = data.table::fread('list_person_all_extended_utf8.csv',data.table = F)
-  fiction_info = fiction_info[!duplicated(fiction_info$作品ID),] # 去除重复的作品ID
-  fiction_info = fiction_info[!duplicated(fiction_info$テキストファイルURL),] # 去除重复的下载URL
-  # 创建变量以便之后的下载和对应
 
-  fiction_info$author = paste0(fiction_info$姓 , fiction_info$名)
-  fiction_info$fiction_new_name = paste0(fiction_info$作品ID,'_',fiction_info$作品名,'_',fiction_info$author,'_',fiction_info$副題,'.txt')
-  fiction_info$fiction_new_name = gsub(' ','-',fiction_info$fiction_new_name)
-  fiction_info$fiction_new_name = gsub('\t','-',fiction_info$fiction_new_name)
-  fiction_info$fiction_new_name = gsub('　','-',fiction_info$fiction_new_name)
-
-  # 保存到rda
-  save(fiction_info,file = 'fiction_info.rda')
-}
 load('data/fiction_info.rda')
 
 # 构建R下载函数
-#fiction_dir = 'fiction_download'
-#作品名字=  '樹木とその葉'
-#作家 = '若山牧水'
-
 download_fiction <- function(作品名字, 作家, fiction_dir = 'fiction_download') {
   # 创建下载作品路径
   if(!dir.exists(fiction_dir)){dir.create(fiction_dir)}
@@ -74,21 +60,11 @@ download_fiction <- function(作品名字, 作家, fiction_dir = 'fiction_downlo
   }
 }
 #download_fiction(作品名字 ='樹木とその葉',作家 = '若山牧水' )
-#reticulate::install_miniconda()
-#use_miniconda('/Users/slv/Library/r-miniconda')
-#reticulate::py_install('mecab-python3==1.0.2',pip = T)
-#reticulate::py_install('unidic-lite',pip = T)
-#reticulate::py_install('fugashi',pip = T)
-#reticulate::py_install('asari',pip = T)
-#reticulate::conda_install(packages = 'libcxx',forge = T)
-#R.home()
-#py_config()
-
-#a = import('MeCab')
 
 
-# mac 需要安装xcode
- source_python('mecab2.py') #测试包
+
+
+# source_python('mecab2.py') #测试包
 # c = import('MeCab')
 #
 #   tagger = c$Tagger
@@ -99,16 +75,9 @@ download_fiction <- function(作品名字, 作家, fiction_dir = 'fiction_downlo
 # b  = q$api$Sonar$ping(self = 'b',text = 'pythonががりりりりりり大好きです')
 #
 # b(text = '広告多すぎる')
-# q$api$Sonar$ping(text = '広告多すぎる',self =1)
 #funcMecab <- py_load_object("funcMecab.pkl")
 #funcAsari <- py_load_object("funcAsari.pkl")
 
-library(reticulate)
-
-
-#source_python('mecab2.py') #测试包
-#funcMecab <- py_function("funcMecab", "mecab2")
-#funcAsari <- py_function("funcAsari", "mecab2")
 #txt = '/Users/slv/Desktop/JLanalyser/fiction_download/2212_樹木とその葉_若山牧水_03-島三題.txt'
 #a = mecab_process(fiction_file = 'fiction_download/2618_樹木とその葉_若山牧水_17-歌と宗教.txt')
 #funcMecab(fiction_file)
@@ -137,10 +106,7 @@ mecab_process  = function(fiction_file = NULL,
   # 恢复warning
   options (warn = 1)
 }
-#a = mecab_process(txt)
-#df = as.data.frame(table(a[,1]))
 
-#dim(a)
 # 输出词袋
 word_packet_from_mecab = function(processed_mecab_result,
                                   word_packet_dir ='word_packet_result',output_prefix){
@@ -174,11 +140,9 @@ word_packet_from_mecab = function(processed_mecab_result,
 
 #b =word_packet_from_mecab(a,output_name = '1')
 
-#mecab_process(txt)
 
 #情感分析
-#source_python('asari2.py') #测试包
-#source_python('asari2.py')
+
 sentiment_analysis = function(text){
   #source_python('mecab2.py') #测试包
   source_python(system.file('data/asari2.py', package = "AOZORAtools"))
@@ -190,7 +154,6 @@ sentiment_analysis = function(text){
 #a = sentiment_analysis('広告多すぎる')
 #a = funcAsari("広告多すぎる♡")
 
-#word_packet_df = b
 # 分类器    --需要提前载入model和word_list
 school_classify = function(word_packet_result){
   if (class(word_packet_result)=="data.frame"  ){
@@ -220,42 +183,3 @@ school_classify = function(word_packet_result){
   return(school)
 }
 #school_classify(word_packet_df)
-
-
-
-
-
-
-
-
-if(F){
-library(dplyr)
-duplicated(fiction_info$作品名) %>% table()
-duplicated(fiction_info$作品ID) %>% table()
-
-url1= 'https://www.aozora.gr.jp/cards/000879/files/4308_ruby_6117.zip'
-url2= ''
-作品名字 = 1
-basename(url1)
-download.file(url1,basename(url1), mode = "wb")
-unzip(basename(url1))
-library(unzip)
-
-
-}
-# gsub('  ','','現代語訳　平家物語')
-# bin_url = 'https://cdn.huggingface.co/cl-tohoku/bert-base-japanese/pytorch_model.bin'
-# vocab_url = 'httpsß://s3.amazonaws.com/models.huggingface.co/bert/cl-tohoku/bert-base-japanese/vocab.txt'
-# config_url = 'https://s3.amazonaws.com/models.huggingface.co/bert/cl-tohoku/bert-base-japanese/config.json'
-# library(RMeCab)
-# library(japaneseNLP)
-# install.packages("japaneseNLP")
-# install.packages("RMeCab", repos = "https://rmecab.jp/R")
-# install.packages("RMeCab", repos = "https://rmecab.jp/R", type = "source")
-# remotes::install_github("yamano357/rJaNLP")
-
-# reticulate::py_install('torch',pip = T)
-# reticulate
-# reticulate::py_install('transformers')
-# reticulate::py_install('tensorflow')
-# reticulate::py_install('mlask',pip = T)
