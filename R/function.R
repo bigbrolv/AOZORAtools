@@ -5,25 +5,26 @@ library(R.utils)
 library(mlr)
 library(randomForest)
 library(reticulate)
-use_python(gsub('lib/R','bin/python3.8',R.home()))
-py_config()
+#use_python(gsub('lib/R','bin/python3.8',R.home()))
+#py_config()
+
 # conda create -n AOZORAtools -c conda-forge R r-devtools r-data.table r-reticulate r-r.utils r-mlr r-randomforest python=3.8 unidic-lite mecab-python3 
 # conda activate AOZORAtools
-#pip install asari
-#R
+# pip install asari
+# R
 
-#remove.packages('AOZORAtools')
-#devtools::install_github('bigbrolv/AOZORAtools')
-#library(AOZORAtools)
-#sentiment_analysis('広告多すぎる')
-#install.packages(c("devtools","roxygen2","testthat","knitr"))
-#reticulate::install_miniconda()
-#use_miniconda('/Users/slv/Library/r-miniconda')
-#reticulate::py_install('mecab-python3==1.0.2',pip = T)
-#reticulate::py_install('unidic-lite',pip = T)
-#reticulate::py_install('fugashi',pip = T)
-#reticulate::py_install('asari',pip = T)
-#reticulate::conda_install(packages = 'libcxx',forge = T)
+# remove.packages('AOZORAtools')
+# devtools::install_github('bigbrolv/AOZORAtools')
+# library(AOZORAtools)
+# sentiment_analysis('広告多すぎる')
+# install.packages(c("devtools","roxygen2","testthat","knitr"))
+# reticulate::install_miniconda()
+# use_miniconda('/Users/slv/Library/r-miniconda')
+# reticulate::py_install('mecab-python3==1.0.2',pip = T)
+# reticulate::py_install('unidic-lite',pip = T)
+# reticulate::py_install('fugashi',pip = T)
+# reticulate::py_install('asari',pip = T)
+# reticulate::conda_install(packages = 'libcxx',forge = T)
 # mac 需要安装xcode （mecab need）
 #需要的包  1.data.table 2.reticulate 3.R.utils
 
@@ -166,8 +167,8 @@ sentiment_analysis = function(text){
 
 #a = sentiment_analysis('広告多すぎる')
 #a = funcAsari("広告多すぎる♡")
-all_words = readRDS('classifier_word_list.rds')
-model = readRDS('model.rds')
+all_words = readRDS('data/classifier_word_list.rds')
+model = readRDS('data/model.rds')
 # 分类器    --需要提前载入model和word_list
 school_classify = function(word_packet_result){
   if (class(word_packet_result)=="data.frame"  ){
