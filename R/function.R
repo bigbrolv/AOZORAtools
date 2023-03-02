@@ -1,13 +1,20 @@
 library(devtools)
 library(data.table)
-library(reticulate)
+
 library(R.utils)
 library(mlr)
 library(randomForest)
+library(reticulate)
+#use_python(gsub('lib/R','bin/python3.8',R.home()))
+#py_config()
 # conda create -n AOZORAtools -c conda-forge R r-devtools r-data.table r-reticulate r-r.utils r-mlr r-randomforest python=3.8 unidic-lite mecab-python3 
 #pip install asari
 #R
+
+
 #devtools::install_github('bigbrolv/AOZORAtools')
+#library(AOZORAtools)
+#sentiment_analysis('広告多すぎる')
 #install.packages(c("devtools","roxygen2","testthat","knitr"))
 #reticulate::install_miniconda()
 #use_miniconda('/Users/slv/Library/r-miniconda')
@@ -147,7 +154,7 @@ word_packet_from_mecab = function(processed_mecab_result,
 sentiment_analysis = function(text){
   #source_python('mecab2.py') #测试包
   #source_python(system.file('data/asari2.py', package = "AOZORAtools"))
-  asari_res = funcAsari2(text)
+  asari_res = funcAsari(text)
   print(paste0('输入文字的情感是：',asari_res$top_class))
   return(asari_res)
 }
