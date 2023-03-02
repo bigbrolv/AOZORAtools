@@ -167,8 +167,8 @@ sentiment_analysis = function(text){
 
 #a = sentiment_analysis('広告多すぎる')
 #a = funcAsari("広告多すぎる♡")
-all_words = readRDS('data/classifier_word_list.rds')
-model = readRDS('data/model.rds')
+#all_words = readRDS('data/classifier_word_list.rds')
+#model = readRDS('data/model.rds')
 # 分类器    --需要提前载入model和word_list
 school_classify = function(word_packet_result){
   if (class(word_packet_result)=="data.frame"  ){
@@ -181,10 +181,10 @@ school_classify = function(word_packet_result){
 
 
   # 词袋重合 intersect_df  合并  词袋不重合setdiff_df
-  #all_words = readRDS('classifier_word_list.rds')
+  all_words = readRDS(system.file('data/classifier_word_list.rds', package = "AOZORAtools"))
   match_df = data.frame(word = all_words,code = paste0('W',1:length(all_words)))
 
-  #model = readRDS('model.rds')
+  model = readRDS(system.file('data/model.rds, package = "AOZORAtools"))
   intersect_df = word_packet_df[word_packet_df[,1] %in% all_words,]
   setdiff_df = data.frame(word = setdiff(all_words,word_packet_df[,1]),frequence = 0)
   need_predict_df = rbind(intersect_df,setdiff_df)
