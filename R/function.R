@@ -179,6 +179,7 @@ school_classify = function(word_packet_result){
     word_packet_df =  data.table::fread(word_packet_result,data.table =F)
   }
 
+  
 
   # 词袋重合 intersect_df  合并  词袋不重合setdiff_df
   all_words = readRDS(system.file('data/classifier_word_list.rds', package = "AOZORAtools"))
