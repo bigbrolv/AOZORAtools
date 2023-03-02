@@ -184,7 +184,7 @@ school_classify = function(word_packet_result){
   all_words = readRDS(system.file('data/classifier_word_list.rds', package = "AOZORAtools"))
   match_df = data.frame(word = all_words,code = paste0('W',1:length(all_words)))
 
-  model = readRDS(system.file('data/model.rds, package = "AOZORAtools"))
+  model = readRDS(system.file('data/model.rds', package = "AOZORAtools"))
   intersect_df = word_packet_df[word_packet_df[,1] %in% all_words,]
   setdiff_df = data.frame(word = setdiff(all_words,word_packet_df[,1]),frequence = 0)
   need_predict_df = rbind(intersect_df,setdiff_df)
