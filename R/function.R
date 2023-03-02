@@ -1,4 +1,10 @@
 library(devtools)
+library(data.table)
+library(reticulate)
+library(R.utils)
+library(mlr)
+library(randomForest)
+
 #install.packages(c("devtools","roxygen2","testthat","knitr"))
 #reticulate::install_miniconda()
 #use_miniconda('/Users/slv/Library/r-miniconda')
@@ -9,11 +15,6 @@ library(devtools)
 #reticulate::conda_install(packages = 'libcxx',forge = T)
 # mac 需要安装xcode （mecab need）
 #需要的包  1.data.table 2.reticulate 3.R.utils
-library(data.table)
-library(reticulate)
-library(R.utils)
-library(mlr)
-library(randomForest)
 
 load('data/fiction_info.rda')
 
@@ -63,24 +64,22 @@ download_fiction <- function(作品名字, 作家, fiction_dir = 'fiction_downlo
 
 
 
+# Python 函数  funcMecab funcAsari
+mecab = import('MeCab')
+tagger = mecab$Tagger()
+funcMecab = function(text_file){
+  fiction_text = readLines(text_file,encoding= 'Shift-JIS')
+  fiction_text <- iconv(fiction_text, from = "Shift-JIS", to = "UTF-8")
+  fiction_text_all = paste0(fiction_text,collapse = '')
+  return(tagger$parse(fiction_text_all))
+}
 
-# source_python('mecab2.py') #测试包
-# c = import('MeCab')
-#
-#   tagger = c$Tagger
-#   a = tagger$version
-#     tagger$parse( 'pythonががりりりりりり大好きです')
-# #print(tagger.parse("pythonががりりりりりり大好きです"))
-# q = import('asari')
-# b  = q$api$Sonar$ping(self = 'b',text = 'pythonががりりりりりり大好きです')
-#
-# b(text = '広告多すぎる')
-#funcMecab <- py_load_object("funcMecab.pkl")
-#funcAsari <- py_load_object("funcAsari.pkl")
+asari = import('asari')
+Sonar = asari$api$Sonar()
+funcAsari = function(txt){
+  return(Sonar$ping(text = txt))
+}
 
-#txt = '/Users/slv/Desktop/JLanalyser/fiction_download/2212_樹木とその葉_若山牧水_03-島三題.txt'
-#a = mecab_process(fiction_file = 'fiction_download/2618_樹木とその葉_若山牧水_17-歌と宗教.txt')
-#funcMecab(fiction_file)
 # 分词
 mecab_process  = function(fiction_file = NULL,
                           fiction_dir = 'fiction_download',
@@ -139,7 +138,6 @@ word_packet_from_mecab = function(processed_mecab_result,
 }
 
 #b =word_packet_from_mecab(a,output_name = '1')
-
 
 #情感分析
 
